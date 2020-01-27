@@ -1,6 +1,6 @@
 # pypure_examples
 
-Simple scripts using the py-pure-client python sdk
+Simple scripts using the py-pure-client python sdk.  Start learning with the [quick start](https://py-pure-client.readthedocs.io/en/latest/quick_start.html#pure1-client)  guide
 
 # Pure1 Auth:
 
