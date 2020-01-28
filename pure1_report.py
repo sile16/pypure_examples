@@ -29,6 +29,7 @@ def generate_fleet_report(pure1_api_id, pure1_pk_file, pure1_pk_pwd):
 
     with open('pure1_report_fa.csv', 'w') as csvfile_fa:
         with open('pure1_report_fb.csv', 'w') as csvfile_fb:
+            # Create two CSV files for writing to
             filewriter_fa = csv.writer(csvfile_fa, delimiter=',',
                                     quotechar='|', quoting=csv.QUOTE_MINIMAL)
             filewriter_fa.writerow(['Array Name', 'Array ID', 'Model', 'OS Version',
@@ -42,12 +43,14 @@ def generate_fleet_report(pure1_api_id, pure1_pk_file, pure1_pk_pwd):
                                 'Total Capacity (TB)', 'Data Reduction', '% Used',
                                 'File System Space (TB)', 'Object Store Space (TB)'])
 
+            # Go through all arrays
             for array in arrays:
                 os_version = str.format("{} {}", array.os, array.version)
                 if 'FA' in array.os:
                     metrics_names = ['array_total_capacity', 'array_data_reduction', 'array_shared_space', 
                                     'array_volume_space', 'array_snapshot_space', 'array_system_space', 'array_total_load']
                     if 'CBS' in array.model:
+                        # Only our Capacity on demand & CBS have effective_used_space
                         metrics_names.append('array_effective_used_space')
                 else:
                     metrics_names = ['array_total_capacity', 'array_data_reduction', 
