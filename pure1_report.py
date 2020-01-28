@@ -100,7 +100,6 @@ def generate_fleet_report(pure1_api_id, pure1_pk_file, pure1_pk_pwd):
                 
                 # Check to see if we should delay so we don't hit an API limit
                 # add some delays in here  if we get too close to limit.
-                
                 progress(count, len(arrays), 'Getting array metrics.                           ')
                 if int(response.headers.x_ratelimit_remaining_second) == 1:
                     #progress(count, len(arrays), "Sleeping because of API per 5 sec rate limit")
@@ -178,6 +177,7 @@ def generate_fleet_report(pure1_api_id, pure1_pk_file, pure1_pk_pwd):
                             pcnt_used = round(100 * (fs_space + object_space) / total_capacity, 2)
                         except TypeError as e:
                             pass
+                        #write entry into CSV file
                         filewriter_fb.writerow([array.name, array.id, array.model, array.version, total_capacity, data_reduction,
                                             pcnt_used, fs_space, object_space])
                 else:
@@ -190,6 +190,7 @@ def generate_fleet_report(pure1_api_id, pure1_pk_file, pure1_pk_pwd):
                     else:     
                         print(str.format("error code: {}\n error: {}", response.status_code, response.errors[0].message))
                         print(str.format(" metrics: {}", str(metrics_names)))
+        
 
 
 
@@ -204,10 +205,11 @@ if __name__ == '__main__':
                    help="use if private key is encrypted (or use keyboard prompt)")
 
     ARGS = _.parse_args()
-
     print("Generating Pure1 custom report")
     generate_fleet_report(ARGS.pure1_api_id, ARGS.pure1_pk_file, ARGS.password)
+    # Make progress bar hit 100%  because.... that's nice.
+    progress(1,1, 'Finished                                   ')
     print("")
     print('Finished')
-    
+
 
