@@ -54,9 +54,11 @@ def generate_fleet_report(pure1_api_id, pure1_pk_file, pure1_pk_pwd):
     # Get all  Arrays, FlashArray & FlashBlade.
     response = pure1Client.get_arrays()
 
-    arrays = []
-    if response is not None:
-        arrays = list(response.items)
+    if not response:
+        print("No arrays found")
+        return
+    
+    arrays = list(response.items)
 
     with open('pure1_report_fa.csv', 'w') as csvfile_fa:
         with open('pure1_report_fb.csv', 'w') as csvfile_fb:
@@ -76,7 +78,6 @@ def generate_fleet_report(pure1_api_id, pure1_pk_file, pure1_pk_pwd):
 
             # Go through all arrays
             count = 0
-            total = len(arrays)
             for array in arrays:
                 if 'FA' in array.os:
                     # FlashArray Metrics
@@ -190,7 +191,8 @@ def generate_fleet_report(pure1_api_id, pure1_pk_file, pure1_pk_pwd):
                     else:     
                         print(str.format("error code: {}\n error: {}", response.status_code, response.errors[0].message))
                         print(str.format(" metrics: {}", str(metrics_names)))
-        
+
+            progress(1,1, 'Finished, {} result(s) saved into 2 csv files.'.format(len(arrays)))
 
 
 
@@ -208,8 +210,7 @@ if __name__ == '__main__':
     print("Generating Pure1 custom report")
     generate_fleet_report(ARGS.pure1_api_id, ARGS.pure1_pk_file, ARGS.password)
     # Make progress bar hit 100%  because.... that's nice.
-    progress(1,1, 'Finished                                   ')
+    
     print("")
-    print('Finished')
 
 
